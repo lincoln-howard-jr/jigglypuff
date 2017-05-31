@@ -1,0 +1,19 @@
+{
+  "name": "jigglypuff",
+  "version": "0.0.0",
+  "description": "Auto-generate rest api over a mongoose model.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lincoln-howard-jr/jigglypuff.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lincoln-howard-jr/jigglypuff/issues"
+  },
+  "homepage": "https://github.com/lincoln-howard-jr/jigglypuff#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
