@@ -26,12 +26,13 @@ class REST {
     this.router.get.apply (
       this.router,
       toArgs (
-        `/${this.name}`,
-        this.middlewares,
+        `/${this.name}/:id`,
+        [],
         (req, res) => {
-          this.Model.find ({}, (err, models) => {
+          this.Model.find ({_id: req.params.id}, (err, model) => {
             if (err) return res.status (500).end ();
-            res.status (200).json (models);
+            if (!model) return res.status (404).end ();
+            res.status (200).json (model);
           });
         }
       )
@@ -40,8 +41,8 @@ class REST {
     this.router.get.apply (
       this.router,
       toArgs (
-        `/${this.name}/:id`,
-        [],
+        `/${this.name}`,
+        this.middlewares,
         (req, res) => {
           this.Model.find ({}, (err, models) => {
             if (err) return res.status (500).end ();
