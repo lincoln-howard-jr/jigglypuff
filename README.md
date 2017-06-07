@@ -1,13 +1,13 @@
 # jigglypuff
 Auto-generate rest api over a mongoose model.
 
-##Installation
+## Installation
 Install from the git repo
 ```bash
   npm install --save lincoln-howard-jr/jigglypuff
 ```
 
-##Usage
+## Usage
 Basic Usage:
 ```js
   // import the es6 rest class
@@ -40,3 +40,10 @@ And routes can be selected individually...
   // or, because chainable
   controller.get ().post ().put ().delete ();
 ```
+
+Created routes are as follows
+* GET /:collection
+* GET /:collection/:id
+* POST /:collection
+* PUT /:collection/:id
+* DELETE /:collection/:id
