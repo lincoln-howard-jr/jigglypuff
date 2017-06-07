@@ -47,3 +47,5 @@ Created routes are as follows
 * POST /:collection
 * PUT /:collection/:id
 * DELETE /:collection/:id
+
+Collection requests can include a sort, limit, and queries for any field
