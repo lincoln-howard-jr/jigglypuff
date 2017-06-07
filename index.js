@@ -27,10 +27,10 @@ class REST {
       this.router,
       toArgs (
         `/${this.name}/:id`,
-        [],
+        this.middlewares,
         (req, res) => {
-          this.Model.find ({_id: req.params.id}, (err, model) => {
-            if (err) return res.status (500).end ();
+          this.Model.findOne ({_id: req.params.id}, (err, model) => {
+            if (err) return res.status (500).json (err);
             if (!model) return res.status (404).end ();
             res.status (200).json (model);
           });
@@ -44,8 +44,27 @@ class REST {
         `/${this.name}`,
         this.middlewares,
         (req, res) => {
-          this.Model.find ({}, (err, models) => {
-            if (err) return res.status (500).end ();
+          // feed this to mongoose later
+          let obj = {};
+          // loop over schema keys
+          Object.keys (this.Model.schema.obj).forEach ((k) => {
+            // add queries if needed
+            if (req.query [k])
+              obj [k] = req.query [k];
+          });
+          // create the mongoose query
+          let query = this.Model.find (obj);
+          // if sorting
+          if (req.query.sort) {
+            query = query.sort (req.query.sort);
+          }
+          // if limiting
+          if (req.query.limit) {
+            query = query.limit (parseInt (req.query.limit));
+          }
+          // callback
+          query.exec ((err, models) => {
+            if (err) return res.status (500).json (err);
             res.status (200).json (models);
           });
         }
@@ -82,7 +101,7 @@ class REST {
         this.middlewares,
         (req, res) => {
           this.Model.update ({_id: req.body.id}, {$set: req.body}, {upsert: true}, (err) => {
-            if (err) return res.status (500).end ();
+            if (err) return res.status (500).json (err);
             res.status (201).end ();
           });
         }
