@@ -9,9 +9,10 @@ class REST {
   // Constructor
   // Takes model file in ../models/ directory
   // Takes name of route (plural)
-  constructor (model, name) {
+  constructor (model, name, id) {
     this.Model = model;
     this.name = name;
+    this.id = id || '_id';
     this.middlewares = [];
     this.router = express.Router ();
   }
@@ -29,7 +30,9 @@ class REST {
         `/${this.name}/:id`,
         this.middlewares,
         (req, res) => {
-          this.Model.findOne ({_id: req.params.id}, (err, model) => {
+          let q = {};
+          q [this.id] = req.params.id;
+          this.Model.findOne (q, (err, model) => {
             if (err) return res.status (500).json (err);
             if (!model) return res.status (404).end ();
             res.status (200).json (model);
@@ -56,11 +59,17 @@ class REST {
           let query = this.Model.find (obj);
           // if sorting
           if (req.query.sort) {
-            query = query.sort (req.query.sort);
+            let sort = {};
+            sort [req.query.sort] = -1;
+            query = query.sort (sort);
           }
           // if limiting
           if (req.query.limit) {
             query = query.limit (parseInt (req.query.limit));
+          }
+          // if limiting
+          if (req.query.skip) {
+            query = query.skip (parseInt (req.query.skip));
           }
           // callback
           query.exec ((err, models) => {
@@ -100,7 +109,9 @@ class REST {
         `/${this.name}`,
         this.middlewares,
         (req, res) => {
-          this.Model.update ({_id: req.body.id}, {$set: req.body}, {upsert: true}, (err) => {
+          let q = {};
+          query [this.id] = req.params.id;
+          this.Model.update (q, {$set: req.body}, {upsert: true}, (err) => {
             if (err) return res.status (500).json (err);
             res.status (201).end ();
           });
