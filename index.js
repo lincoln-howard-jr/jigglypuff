@@ -4,6 +4,13 @@ let express = require ('express');
 let toArgs = (path, middlewares, endpoint) => {
   return [path].concat (middlewares.concat ([endpoint]));
 }
+// remove empty strings, keep undefined
+let removeEmptyStrings = (req, res, next) => {
+  for (let k in req.body)
+    if (req.body [k] === '')
+      delete req.body [k];
+  next ();
+}
 // Create REST class for quickly adding all CRUD routes to an app
 class REST {
   // Constructor
@@ -23,7 +30,7 @@ class REST {
   }
   // add get methods to this router
   get () {
-    // get collection
+    // get one
     this.router.get.apply (
       this.router,
       toArgs (
@@ -88,7 +95,7 @@ class REST {
       this.router,
       toArgs (
         `/${this.name}`,
-        this.middlewares,
+        [removeEmptyStrings].concat (this.middlewares),
         (req, res) => {
           let model = new this.Model (req.body);
           model.save ((err) => {
@@ -107,7 +114,7 @@ class REST {
       this.router,
       toArgs (
         `/${this.name}`,
-        this.middlewares,
+        [removeEmptyStrings].concat (this.middlewares),
         (req, res) => {
           let q = {};
           query [this.id] = req.params.id;
