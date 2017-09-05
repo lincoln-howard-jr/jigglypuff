@@ -117,7 +117,7 @@ class REST {
         [removeEmptyStrings].concat (this.middlewares),
         (req, res) => {
           let q = {};
-          query [this.id] = req.params.id;
+          q [this.id] = req.params.id;
           this.Model.update (q, {$set: req.body}, {upsert: true}, (err) => {
             if (err) return res.status (500).json (err);
             res.status (201).end ();
