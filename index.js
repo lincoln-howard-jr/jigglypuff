@@ -94,7 +94,7 @@ class REST {
     this.router.post.apply (
       this.router,
       toArgs (
-        `/${this.name}`,
+        `/${this.name}/:id`,
         [removeEmptyStrings].concat (this.middlewares),
         (req, res) => {
           let model = new this.Model (req.body);
